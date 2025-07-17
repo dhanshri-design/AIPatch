@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Server Patching Automation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .workflow-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid #667eea;
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .workflow-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .workflow-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .workflow-card li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .workflow-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .comparison-card {
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .before {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .after {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .comparison-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tech-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .tech-card h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">🤖 AI PatchBot</div>
+            <ul class="nav-links">
+                <li><a href="#workflow">Workflow</a></li>
+                <li><a href="#benefits">Benefits</a></li>
+                <li><a href="#tech">Technology</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animated">
+                <h1>AI-Powered Server Patching Automation</h1>
+                <p>Eliminate manual intervention and reduce security exposure with intelligent, end-to-end server patching</p>
+                <a href="#workflow" class="cta-button pulse">Explore the Solution</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="overview">
+        <div class="container">
+            <h2>Transform Your Patching Process</h2>
+            <div class="comparison animated">
+                <div class="comparison-card before">
+                    <h3>❌ Manual Process</h3>
+                    <ul style="list-style: none; text-align: left;">
+                        <li>• PM checks patch counts manually</li>
+                        <li>• Multiple handoffs between teams</li>
+                        <li>• Manual server selection and approval</li>
+                        <li>• Engineer-driven execution</li>
+                        <li>• Manual reporting and tracking</li>
+                        <li>• High risk of human error</li>
+                        <li>• Slow response to critical patches</li>
+                    </ul>
+                </div>
+                <div class="comparison-card after">
+                    <h3>✅ AI-Automated Process</h3>
+                    <ul style="list-style: none; text-align: left;">
+                        <li>• Automated patch data collection</li>
+                        <li>• AI-driven intelligent prioritization</li>
+                        <li>• Smart server selection & planning</li>
+                        <li>• Automated execution via CAP Tool</li>
+                        <li>• Real-time validation & reporting</li>
+                        <li>• Machine learning optimization</li>
+                        <li>• Continuous compliance monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="workflow">
+        <div class="container">
+            <h2>Intelligent Workflow Steps</h2>
+            <div class="workflow-grid">
+                <div class="workflow-card animated">
+                    <h3>1. Patch Data Collection</h3>
+                    <ul>
+                        <li>Pre-configured APIs and server agents</li>
+                        <li>Vulnerability management system integration</li>
+                        <li>Centralized CMDB connectivity</li>
+                        <li>Real-time inventory monitoring</li>
+                    </ul>
+                </div>
+                <div class="workflow-card animated">
+                    <h3>2. Intelligent Prioritization</h3>
+                    <ul>
+                        <li>Patch criticality assessment</li>
+                        <li>Business impact analysis</li>
+                        <li>Server dependency mapping</li>
+                        <li>ML-based optimization learning</li>
+                    </ul>
+                </div>
+                <div class="workflow-card animated">
+                    <h3>3. Auto-Selection & Planning</h3>
+                    <ul>
+                        <li>Optimal server selection</li>
+                        <li>Load distribution analysis</li>
+                        <li>SLA compliance checking</li>
+                        <li>Patch window optimization</li>
+                    </ul>
+                </div>
+                <div class="workflow-card animated">
+                    <h3>4. Virtual Approval Simulation</h3>
+                    <ul>
+                        <li>Pre-approved server groups</li>
+                        <li>Risk category auto-approval</li>
+                        <li>Manager notification system</li>
+                        <li>Integrated communication channels</li>
+                    </ul>
+                </div>
+                <div class="workflow-card animated">
+                    <h3>5. Automated Execution</h3>
+                    <ul>
+                        <li>CAP Tool API integration</li>
+                        <li>Controlled server shutdown</li>
+                        <li>Intelligent patching sequence</li>
+                        <li>Automated restart procedures</li>
+                    </ul>
+                </div>
+                <div class="workflow-card animated">
+                    <h3>6. Post-Patch Validation</h3>
+                    <ul>
+                        <li>Patch status verification</li>
+                        <li>Health check monitoring</li>
+                        <li>Service availability validation</li>
+                        <li>Application-level verification</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="benefits">
+        <div class="container">
+            <h2>Key Benefits</h2>
+            <div class="stats">
+                <div class="stat-card animated">
+                    <div class="stat-number">90%+</div>
+                    <div class="stat-label">Manual Effort Reduction</div>
+                </div>
+                <div class="stat-card animated">
+                    <div class="stat-number">75%</div>
+                    <div class="stat-label">Faster Patch Deployment</div>
+                </div>
+                <div class="stat-card animated">
+                    <div class="stat-number">99%</div>
+                    <div class="stat-label">Reduced Human Errors</div>
+                </div>
+                <div class="stat-card animated">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Continuous Monitoring</div>
+                </div>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card animated">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Rapid Response</h3>
+                    <p>Dramatically reduce security exposure windows with automated, intelligent patching schedules</p>
+                </div>
+                <div class="benefit-card animated">
+                    <div class="benefit-icon">🎯</div>
+                    <h3>Enhanced Accuracy</h3>
+                    <p>Eliminate human errors with AI-driven decision making and automated execution</p>
+                </div>
+                <div class="benefit-card animated">
+                    <div class="benefit-icon">📊</div>
+                    <h3>Complete Traceability</h3>
+                    <p>Comprehensive audit trails and compliance reporting for all patching activities</p>
+                </div>
+                <div class="benefit-card animated">
+                    <div class="benefit-icon">🧠</div>
+                    <h3>Continuous Learning</h3>
+                    <p>Machine learning algorithms optimize patch schedules and reduce service impact over time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="tech">
+        <div class="container">
+            <h2>Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-card animated">
+                    <h4>🔗 Integration Layer</h4>
+                    <p>CAP Tool API, CMDB, Vulnerability Management Systems, Communication APIs</p>
+                </div>
+                <div class="tech-card animated">
+                    <h4>🤖 AI Engine</h4>
+                    <p>NLP, Machine Learning, Decision Engine, Workflow Orchestration</p>
+                </div>
+                <div class="tech-card animated">
+                    <h4>🛡️ Security</h4>
+                    <p>RBAC, Audit Logging, Rollback Mechanisms, Compliance Monitoring</p>
+                </div>
+                <div class="tech-card animated">
+                    <h4>📈 Monitoring</h4>
+                    <p>Real-time Dashboards, Feedback Systems, Performance Analytics</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="contact">
+        <div class="container">
+            <h2>Ready to Transform Your Patching Process?</h2>
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">Join the future of automated server management with AI-powered patching</p>
+                <a href="#" class="cta-button">Get Started Today</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 AI PatchBot. Revolutionizing server patching with artificial intelligence.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe animated elements
+        document.querySelectorAll('.animated').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(el);
+        });
+
+        // Dynamic stats counter
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = stat.textContent;
+                const isPercent = target.includes('%');
+                const number = parseInt(target.replace(/[^0-9]/g, ''));
+                let current = 0;
+                const increment = number / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= number) {
+                        current = number;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(current) + (isPercent ? '%' : target.includes('/') ? '/7' : '+');
+                }, 50);
+            });
+        }
+
+        // Trigger stats animation when section is visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+        // Add hover effects to cards
+        document.querySelectorAll('.workflow-card, .benefit-card, .tech-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
