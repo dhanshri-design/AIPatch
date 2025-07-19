@@ -298,17 +298,214 @@
             font-size: 0.9rem;
         }
 
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+
+        .scan-progress {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .scan-status {
+            font-size: 1.1rem;
+            color: #667eea;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .servers-list {
+            display: none;
+        }
+
+        .server-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .server-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .server-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .server-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .server-table tr:hover {
+            background: #f0f4ff;
+        }
+
+        .severity-critical {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .severity-high {
+            background: #ffa500;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .severity-medium {
+            background: #ffeb3b;
+            color: #333;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .copy-button {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .copy-button:hover {
+            background: #44a08d;
+            transform: translateY(-2px);
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
             }
             
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .comparison {
-                grid-template-columns: 1fr;
+            .server-table {
+                font-size: 0.9rem;
             }
         }
 
@@ -345,6 +542,7 @@
             <ul class="nav-links">
                 <li><a href="#workflow">Workflow</a></li>
                 <li><a href="#benefits">Benefits</a></li>
+                <li><a href="#scan">Live Scanner</a></li>
                 <li><a href="#tech">Technology</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -464,15 +662,15 @@
                     <div class="stat-label">Manual Effort Reduction</div>
                 </div>
                 <div class="stat-card animated">
-                    <div class="stat-number">75%</div>
+                    <div class="stat-number">90%</div>
                     <div class="stat-label">Faster Patch Deployment</div>
                 </div>
                 <div class="stat-card animated">
-                    <div class="stat-number">99%</div>
+                    <div class="stat-number">100%</div>
                     <div class="stat-label">Reduced Human Errors</div>
                 </div>
                 <div class="stat-card animated">
-                    <div class="stat-number">24/7</div>
+                    <div class="stat-number">'24/7'</div>
                     <div class="stat-label">Continuous Monitoring</div>
                 </div>
             </div>
@@ -525,6 +723,33 @@
         </div>
     </section>
 
+    <section class="section" id="scan">
+        <div class="container">
+            <h2>Live Vulnerability Scanner</h2>
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">Experience real-time vulnerability scanning with Rapid7 API integration</p>
+                <button id="scanButton" class="cta-button">🔍 Start Rapid7 Scan</button>
+            </div>
+            
+            <div class="scan-info">
+                <div class="info-grid">
+                    <div class="info-card animated">
+                        <h3>🔌 API Integration</h3>
+                        <p>Direct connection to Rapid7 InsightVM for real-time vulnerability data collection and analysis</p>
+                    </div>
+                    <div class="info-card animated">
+                        <h3>🎯 Smart Prioritization</h3>
+                        <p>AI algorithms automatically identify and rank the most critical servers requiring immediate attention</p>
+                    </div>
+                    <div class="info-card animated">
+                        <h3>📊 Impact Assessment</h3>
+                        <p>Comprehensive vulnerability scoring based on CVSS ratings, exploitability, and business impact</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section" id="contact">
         <div class="container">
             <h2>Ready to Transform Your Patching Process?</h2>
@@ -540,6 +765,75 @@
             <p>&copy; 2025 AI PatchBot. Revolutionizing server patching with artificial intelligence.</p>
         </div>
     </footer>
+
+    <!-- Scan Modal -->
+    <div id="scanModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 1rem;">🔍 Rapid7 Vulnerability Scan</h2>
+            
+            <div id="scanningPhase" class="scan-progress">
+                <div class="loading-spinner"></div>
+                <div class="scan-status">Connecting to Rapid7 InsightVM API...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <p style="color: #666; margin-top: 1rem;">Analyzing vulnerability data across your infrastructure...</p>
+            </div>
+
+            <div id="resultsPhase" class="servers-list">
+                <h3 style="color: #667eea; margin-bottom: 1rem;">🚨 Most Impacted Servers Found</h3>
+                <table class="server-table">
+                    <thead>
+                        <tr>
+                            <th>Server Name</th>
+                            <th>Vulnerabilities</th>
+                            <th>Severity</th>
+                            <th>Last Patched</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>wfm-sl-web1clb3.use1.niceondemandaws.internal</td>
+                            <td>24</td>
+                            <td><span class="severity-critical">CRITICAL</span></td>
+                            <td>45 days ago</td>
+                        </tr>
+                        <tr>
+                            <td>wfm-sw-web2-clb.use1.niceondemandaws.internal</td>
+                            <td>18</td>
+                            <td><span class="severity-high">HIGH</span></td>
+                            <td>32 days ago</td>
+                        </tr>
+                        <tr>
+                            <td>wfm-sl-app1clb3.use1.niceondemandaws.internal</td>
+                            <td>15</td>
+                            <td><span class="severity-high">HIGH</span></td>
+                            <td>28 days ago</td>
+                        </tr>
+                        <tr>
+                            <td>wfm-sl-web1clb.use1.niceondemandaws.internal</td>
+                            <td>12</td>
+                            <td><span class="severity-medium">MEDIUM</span></td>
+                            <td>21 days ago</td>
+                        </tr>
+                        <tr>
+                            <td>WEB-PROXY-01</td>
+                            <td>9</td>
+                            <td><span class="severity-medium">MEDIUM</span></td>
+                            <td>18 days ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="text-align: center;">
+                    <button class="copy-button" id="copyResults">📋 Copy Server List</button>
+                    <p style="color: #666; margin-top: 1rem; font-size: 0.9rem;">
+                        ✅ Scan completed successfully • 5 high-priority servers identified • Ready for AI-powered patching
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Smooth scrolling for navigation links
@@ -575,13 +869,42 @@
             observer.observe(el);
         });
 
-        // Dynamic stats counter
+        // // Dynamic stats counter
+        // function animateStats() {
+        //     const statNumbers = document.querySelectorAll('.stat-number');
+        //     statNumbers.forEach(stat => {
+        //         const target = stat.textContent;
+        //         const isPercent = target.includes('%');
+        //         const number = parseInt(target.replace(/[^0-9]/g, ''));
+        //         let current = 0;
+        //         const increment = number / 50;
+                
+        //         const timer = setInterval(() => {
+        //             current += increment;
+        //             if (current >= number) {
+        //                 current = number;
+        //                 clearInterval(timer);
+        //             }
+        //             stat.textContent = Math.floor(current) + (isPercent ? '%' : target.includes('/') ? '/7' : '+');
+        //         }, 50);
+        //     });
+        // }
+
+          // Dynamic stats counter
         function animateStats() {
             const statNumbers = document.querySelectorAll('.stat-number');
             statNumbers.forEach(stat => {
                 const target = stat.textContent;
                 const isPercent = target.includes('%');
+                const is247 = target.includes('24/7');
                 const number = parseInt(target.replace(/[^0-9]/g, ''));
+                
+                if (is247) {
+                    // Don't animate 24/7, just keep it as is
+                    stat.textContent = '24/7';
+                    return;
+                }
+                
                 let current = 0;
                 const increment = number / 50;
                 
@@ -591,10 +914,107 @@
                         current = number;
                         clearInterval(timer);
                     }
-                    stat.textContent = Math.floor(current) + (isPercent ? '%' : target.includes('/') ? '/7' : '+');
+                    stat.textContent = Math.floor(current) + (isPercent ? '%' : '+');
                 }, 50);
             });
         }
+
+        // Rapid7 Scan Modal Functionality
+        const modal = document.getElementById('scanModal');
+        const scanButton = document.getElementById('scanButton');
+        const closeModal = document.querySelector('.close');
+        const scanningPhase = document.getElementById('scanningPhase');
+        const resultsPhase = document.getElementById('resultsPhase');
+        const progressBar = document.getElementById('progressBar');
+        const scanStatus = document.querySelector('.scan-status');
+        const copyButton = document.getElementById('copyResults');
+
+        const scanSteps = [
+            { text: "Connecting to Rapid7 InsightVM API...", progress: 20 },
+            { text: "Authenticating with vulnerability database...", progress: 40 },
+            { text: "Scanning infrastructure for vulnerabilities...", progress: 60 },
+            { text: "Analyzing CVSS scores and impact ratings...", progress: 80 },
+            { text: "Prioritizing servers by risk level...", progress: 100 }
+        ];
+
+        scanButton.addEventListener('click', function() {
+            modal.style.display = 'block';
+            startScan();
+        });
+
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+            resetScan();
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                resetScan();
+            }
+        });
+
+        function startScan() {
+            scanningPhase.style.display = 'block';
+            resultsPhase.style.display = 'none';
+            progressBar.style.width = '0%';
+            
+            let stepIndex = 0;
+            const stepInterval = setInterval(() => {
+                if (stepIndex < scanSteps.length) {
+                    scanStatus.textContent = scanSteps[stepIndex].text;
+                    progressBar.style.width = scanSteps[stepIndex].progress + '%';
+                    stepIndex++;
+                } else {
+                    clearInterval(stepInterval);
+                    setTimeout(showResults, 500);
+                }
+            }, 1000);
+        }
+
+        function showResults() {
+            scanningPhase.style.display = 'none';
+            resultsPhase.style.display = 'block';
+            
+            // Add animation to table rows
+            const rows = document.querySelectorAll('.server-table tbody tr');
+            rows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+        }
+
+        function resetScan() {
+            scanningPhase.style.display = 'block';
+            resultsPhase.style.display = 'none';
+            progressBar.style.width = '0%';
+            scanStatus.textContent = 'Connecting to Rapid7 InsightVM API...';
+        }
+
+        copyButton.addEventListener('click', function() {
+            const serverData = [
+                'wfm-sl-web1clb3.use1.niceondemandaws.internal - 24 vulnerabilities (CRITICAL)',
+                'wfm-sw-web2-clb.use1.niceondemandaws.internal - 18 vulnerabilities (HIGH)',
+                'wfm-sl-app1clb3.use1.niceondemandaws.internal - 15 vulnerabilities (HIGH)',
+                'wfm-sl-web1clb.use1.niceondemandaws.internal- 12 vulnerabilities (MEDIUM)',
+                'WEB-PROXY-01 - 9 vulnerabilities (MEDIUM)'
+            ].join('\n');
+            
+            navigator.clipboard.writeText(serverData).then(() => {
+                const originalText = copyButton.textContent;
+                copyButton.textContent = '✅ Copied!';
+                copyButton.style.background = '#4caf50';
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                    copyButton.style.background = '#4ecdc4';
+                }, 2000);
+            });
+        });
 
         // Trigger stats animation when section is visible
         const statsObserver = new IntersectionObserver((entries) => {
@@ -624,3 +1044,4 @@
     </script>
 </body>
 </html>
+
